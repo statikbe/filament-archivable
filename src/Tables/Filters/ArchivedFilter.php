@@ -1,6 +1,6 @@
 <?php
 
-namespace Okeonline\FilamentArchivable\Tables\Filters;
+namespace Statik\FilamentArchivable\Tables\Filters;
 
 use Filament\Tables\Filters\Indicator;
 use Filament\Tables\Filters\TernaryFilter;

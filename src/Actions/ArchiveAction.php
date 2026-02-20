@@ -1,6 +1,6 @@
 <?php
 
-namespace Okeonline\FilamentArchivable\Actions;
+namespace Statik\FilamentArchivable\Actions;
 
 use Filament\Actions\Action;
 use Filament\Actions\Concerns\CanCustomizeProcess;
@@ -23,23 +23,19 @@ class ArchiveAction extends Action
 
         $this->modalHeading(fn (): string => __('filament-archivable::actions.archive.single.modal.heading', ['label' => $this->getRecordTitle()]));
 
-        $this->modalSubmitActionLabel(__('filament-archivable::actions.archive.single.modal.actions.archived.label'));
+        $this->modalSubmitActionLabel(__('filament-archivable::actions.archive.single.modal.actions.archive.label'));
 
         $this->successNotificationTitle(__('filament-archivable::actions.archive.single.notifications.archived.title'));
 
         $this->color('warning');
 
-        $this->icon('heroicon-m-archive-box-arrow-down');
+        $this->icon('heroicon-o-archive-box');
 
         $this->requiresConfirmation();
 
-        $this->modalIcon('heroicon-m-archive-box-arrow-down');
-
         $this->hidden(static function (Model $record): bool {
             if (! method_exists($record, 'isArchived')) {
-                // @codeCoverageIgnoreStart
                 return false;
-                // @codeCoverageIgnoreEnd
             }
 
             return $record->isArchived();
@@ -49,11 +45,9 @@ class ArchiveAction extends Action
             $result = $this->process(static fn (Model $record) => $record->archive());
 
             if (! $result) {
-                // @codeCoverageIgnoreStart
                 $this->failure();
 
                 return;
-                // @codeCoverageIgnoreEnd
             }
 
             $this->success();

@@ -1,6 +1,6 @@
 <?php
 
-namespace Okeonline\FilamentArchivable\Actions;
+namespace Statik\FilamentArchivable\Actions;
 
 use Filament\Actions\Action;
 use Filament\Actions\Concerns\CanCustomizeProcess;
@@ -27,44 +27,36 @@ class UnArchiveAction extends Action
 
         $this->successNotificationTitle(__('filament-archivable::actions.unarchive.single.notifications.unarchived.title'));
 
-        $this->color('gray');
+        $this->color('success');
 
-        $this->icon('heroicon-m-arrow-uturn-left');
+        $this->icon('heroicon-o-archive-box-arrow-down');
 
         $this->requiresConfirmation();
 
-        $this->modalIcon('heroicon-o-arrow-uturn-left');
+        $this->visible(static function (Model $record): bool {
+            if (! method_exists($record, 'isArchived')) {
+                return false;
+            }
+
+            return $record->isArchived();
+        });
 
         $this->action(function (Model $record): void {
             if (! method_exists($record, 'unArchive')) {
-                // @codeCoverageIgnoreStart
                 $this->failure();
 
                 return;
-                // @codeCoverageIgnoreEnd
             }
 
             $result = $this->process(static fn () => $record->unArchive());
 
             if (! $result) {
-                // @codeCoverageIgnoreStart
                 $this->failure();
 
                 return;
-                // @codeCoverageIgnoreEnd
             }
 
             $this->success();
-        });
-
-        $this->visible(static function (Model $record): bool {
-            if (! method_exists($record, 'isArchived')) {
-                // @codeCoverageIgnoreStart
-                return false;
-                // @codeCoverageIgnoreEnd
-            }
-
-            return $record->isArchived();
         });
     }
 }

@@ -1,6 +1,6 @@
 <?php
 
-namespace Okeonline\FilamentArchivable;
+namespace Statik\FilamentArchivable;
 
 use Spatie\LaravelPackageTools\Package;
 use Spatie\LaravelPackageTools\PackageServiceProvider;

@@ -1,17 +1,20 @@
 <?php
 
-namespace Okeonline\FilamentArchivable;
+namespace Statik\FilamentArchivable;
 
 use Filament\Contracts\Plugin;
 use Filament\Panel;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Model;
+use LaravelArchivable\Archivable;
 
 class FilamentArchivablePlugin implements Plugin
 {
+    protected string|array $archivedRecordClasses = 'opacity-25';
+
     public function getId(): string
     {
-        return 'archivable';
+        return 'filament-archivable';
     }
 
     public static function make(): static
@@ -19,30 +22,38 @@ class FilamentArchivablePlugin implements Plugin
         return app(static::class);
     }
 
-    public function register(Panel $panel): void
+    public static function get(): static
     {
-        Table::macro('archivedRecordClasses', function (array|string|bool|null $classes = true) {
-            /** @var Table $this */
-            if ($classes === false) {
-                return $this;
-            } elseif ($classes === true) {
-                $this->recordClasses(fn (Model $record) => in_array(\LaravelArchivable\Archivable::class, class_uses($record)) && $record->isArchived() ? FilamentArchivable::$archivedRecordClasses : null); //
-            } else {
-                $this->recordClasses(fn (Model $record) => in_array(\LaravelArchivable\Archivable::class, class_uses($record)) && $record->isArchived() ? $classes : null);
-            }
+        /** @var static $plugin */
+        $plugin = filament(app(static::class)->getId());
 
-            return $this;
-        });
+        return $plugin;
     }
 
-    // @codeCoverageIgnoreStart
-    public function boot(Panel $panel): void {}
-    // @codeCoverageIgnoreEnd
-
-    public function archivedTableRowClasses(string|array $classes): static
+    public function archivedRecordClasses(string|array $classes): static
     {
-        FilamentArchivable::$archivedRecordClasses = $classes;
+        $this->archivedRecordClasses = $classes;
 
         return $this;
+    }
+
+    public function register(Panel $panel): void
+    {
+        //
+    }
+
+    public function boot(Panel $panel): void
+    {
+        $classes = $this->archivedRecordClasses;
+
+        Table::configureUsing(function (Table $table) use ($classes): void {
+            $table->recordClasses(function (Model $record) use ($classes): string|array|null {
+                if (! in_array(Archivable::class, class_uses_recursive($record))) {
+                    return null;
+                }
+
+                return $record->isArchived() ? $classes : null;
+            });
+        });
     }
 }
