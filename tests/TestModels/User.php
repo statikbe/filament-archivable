@@ -1,6 +1,6 @@
 <?php
 
-namespace Okeonline\FilamentArchivable\Tests\TestModels;
+namespace Statik\FilamentArchivable\Tests\TestModels;
 
 use Filament\Models\Contracts\FilamentUser;
 use Filament\Models\Contracts\HasName;
@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
-use Okeonline\FilamentArchivable\Tests\TestFactories\UserFactory;
+use Statik\FilamentArchivable\Tests\TestFactories\UserFactory;
 
 class User extends Authenticatable implements FilamentUser, HasName
 {

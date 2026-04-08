@@ -1,6 +1,6 @@
 <?php
 
-namespace Okeonline\FilamentArchivable\Tests;
+namespace Statik\FilamentArchivable\Tests;
 
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\DisableBladeIconComponents;
@@ -14,11 +14,11 @@ use Illuminate\Routing\Middleware\SubstituteBindings;
 use Illuminate\Session\Middleware\AuthenticateSession;
 use Illuminate\Session\Middleware\StartSession;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
-use Okeonline\FilamentArchivable\FilamentArchivablePlugin;
-use Okeonline\FilamentArchivable\Tests\TestResources\ModelWithArchivableTraitAndCustomClassesResource;
-use Okeonline\FilamentArchivable\Tests\TestResources\ModelWithArchivableTraitAndFalseCustomClassesResource;
-use Okeonline\FilamentArchivable\Tests\TestResources\ModelWithArchivableTraitResource;
-use Okeonline\FilamentArchivable\Tests\TestResources\ModelWithoutArchivableTraitResource;
+use Statik\FilamentArchivable\FilamentArchivablePlugin;
+use Statik\FilamentArchivable\Tests\TestResources\ModelWithArchivableTraitAndCustomClassesResource;
+use Statik\FilamentArchivable\Tests\TestResources\ModelWithArchivableTraitAndFalseCustomClassesResource;
+use Statik\FilamentArchivable\Tests\TestResources\ModelWithArchivableTraitResource;
+use Statik\FilamentArchivable\Tests\TestResources\ModelWithoutArchivableTraitResource;
 
 class PanelProvider extends FilamentPanelProvider
 {

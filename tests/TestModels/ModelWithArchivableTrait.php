@@ -1,12 +1,12 @@
 <?php
 
-namespace Okeonline\FilamentArchivable\Tests\TestModels;
+namespace Statik\FilamentArchivable\Tests\TestModels;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use LaravelArchivable\Archivable;
-use Okeonline\FilamentArchivable\Tests\TestFactories\ModelWithArchivableTraitFactory;
+use Statik\FilamentArchivable\Tests\TestFactories\ModelWithArchivableTraitFactory;
 
 class ModelWithArchivableTrait extends Model
 {

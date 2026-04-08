@@ -1,9 +1,9 @@
 <?php
 
-namespace Okeonline\FilamentArchivable\Tests\TestFactories;
+namespace Statik\FilamentArchivable\Tests\TestFactories;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
-use Okeonline\FilamentArchivable\Tests\TestModels\User;
+use Statik\FilamentArchivable\Tests\TestModels\User;
 
 class UserFactory extends Factory
 {

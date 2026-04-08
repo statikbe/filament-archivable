@@ -1,11 +1,11 @@
 <?php
 
-namespace Okeonline\FilamentArchivable\Tests\TestResources\ModelWithArchivableTraitResource\Pages;
+namespace Statik\FilamentArchivable\Tests\TestResources\ModelWithArchivableTraitResource\Pages;
 
 use Filament\Resources\Pages\EditRecord;
-use Okeonline\FilamentArchivable\Actions\ArchiveAction;
-use Okeonline\FilamentArchivable\Actions\UnArchiveAction;
-use Okeonline\FilamentArchivable\Tests\TestResources\ModelWithArchivableTraitResource;
+use Statik\FilamentArchivable\Actions\ArchiveAction;
+use Statik\FilamentArchivable\Actions\UnArchiveAction;
+use Statik\FilamentArchivable\Tests\TestResources\ModelWithArchivableTraitResource;
 
 class EditPage extends EditRecord
 {

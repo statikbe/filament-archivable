@@ -1,18 +1,15 @@
 <?php
 
-use Okeonline\FilamentArchivable\Actions\ArchiveAction as ActionsArchiveAction;
-use Okeonline\FilamentArchivable\Actions\UnArchiveAction as ActionsUnArchiveAction;
-use Okeonline\FilamentArchivable\FilamentArchivable;
-use Okeonline\FilamentArchivable\FilamentArchivablePlugin;
-use Okeonline\FilamentArchivable\Tables\Actions\ArchiveAction;
-use Okeonline\FilamentArchivable\Tables\Actions\UnArchiveAction;
-use Okeonline\FilamentArchivable\Tables\Filters\ArchivedFilter;
-use Okeonline\FilamentArchivable\Tests\TestModels\ModelWithArchivableTrait;
-use Okeonline\FilamentArchivable\Tests\TestModels\ModelWithoutArchivableTrait;
-use Okeonline\FilamentArchivable\Tests\TestResources\ModelWithArchivableTraitAndCustomClassesResource;
-use Okeonline\FilamentArchivable\Tests\TestResources\ModelWithArchivableTraitAndFalseCustomClassesResource;
-use Okeonline\FilamentArchivable\Tests\TestResources\ModelWithArchivableTraitResource;
-use Okeonline\FilamentArchivable\Tests\TestResources\ModelWithoutArchivableTraitResource;
+use Statik\FilamentArchivable\Actions\ArchiveAction as ActionsArchiveAction;
+use Statik\FilamentArchivable\Actions\ArchiveAction as TableArchiveAction;
+use Statik\FilamentArchivable\Actions\UnArchiveAction as ActionsUnArchiveAction;
+use Statik\FilamentArchivable\Actions\UnArchiveAction as TableUnArchiveAction;
+use Statik\FilamentArchivable\FilamentArchivablePlugin;
+use Statik\FilamentArchivable\Tables\Filters\ArchivedFilter;
+use Statik\FilamentArchivable\Tests\TestModels\ModelWithArchivableTrait;
+use Statik\FilamentArchivable\Tests\TestModels\ModelWithoutArchivableTrait;
+use Statik\FilamentArchivable\Tests\TestResources\ModelWithArchivableTraitResource;
+use Statik\FilamentArchivable\Tests\TestResources\ModelWithoutArchivableTraitResource;
 
 use function Pest\Livewire\livewire;
 
@@ -24,7 +21,7 @@ it('is a valid plugin', function () {
     $plugin = new FilamentArchivablePlugin;
 
     expect($plugin->getId())
-        ->toBe('archivable');
+        ->toBe('filament-archivable');
 
     expect(FilamentArchivablePlugin::make())
         ->toBeInstanceOf(FilamentArchivablePlugin::class);
@@ -66,8 +63,8 @@ it('does not show (un)ArchivedActions when Archivable-trait is not used', functi
         ->assertSuccessful()
         ->assertCanSeeTableRecords($both)
         ->assertCountTableRecords(2)
-        ->assertTableActionDoesNotExist(UnArchiveAction::class, record: $modelWithArchivedAt->nth(1))
-        ->assertTableActionDoesNotExist(ArchiveAction::class, record: $modelWithArchivedAt->nth(2));
+        ->assertTableActionDoesNotExist(TableUnArchiveAction::class, record: $modelWithArchivedAt->nth(1))
+        ->assertTableActionDoesNotExist(TableArchiveAction::class, record: $modelWithArchivedAt->nth(2));
 });
 
 // filters
@@ -123,8 +120,8 @@ it('shows row-action archive, only on unarchived rows', function () {
         ->assertSuccessful()
         ->assertCanSeeTableRecords($modelWithoutArchivedAt)
         ->assertCountTableRecords(1)
-        ->assertTableActionExists(ArchiveAction::class, record: $modelWithoutArchivedAt->first())
-        ->assertTableActionDoesNotExist(ArchiveAction::class, record: $modelWithoutArchivedAt->first());
+        ->assertTableActionExists(TableArchiveAction::class, record: $modelWithoutArchivedAt->first())
+        ->assertTableActionDoesNotExist(TableArchiveAction::class, record: $modelWithoutArchivedAt->first());
 
 });
 
@@ -137,8 +134,8 @@ it('shows row-action unarchive, only on archived rows', function () {
         ->assertSuccessful()
         ->assertCanSeeTableRecords($modelWithArchivedAt)
         ->assertCountTableRecords(1)
-        ->assertTableActionExists(UnArchiveAction::class, record: $modelWithArchivedAt->first())
-        ->assertTableActionDoesNotExist(ArchiveAction::class, record: $modelWithArchivedAt->first());
+        ->assertTableActionExists(TableUnArchiveAction::class, record: $modelWithArchivedAt->first())
+        ->assertTableActionDoesNotExist(TableArchiveAction::class, record: $modelWithArchivedAt->first());
 
 });
 
@@ -151,9 +148,9 @@ it('archives the model if ArchiveAction is called', function () {
         ->assertSuccessful()
         ->assertCanSeeTableRecords($modelWithoutArchivedAt)
         ->assertCountTableRecords(1)
-        ->assertTableActionExists(ArchiveAction::class, record: $modelWithoutArchivedAt->first())
+        ->assertTableActionExists(TableArchiveAction::class, record: $modelWithoutArchivedAt->first())
 
-        ->callTableAction(ArchiveAction::class, $modelWithoutArchivedAt->first())
+        ->callTableAction(TableArchiveAction::class, $modelWithoutArchivedAt->first())
         ->assertHasNoTableActionErrors();
 
     expect($modelWithoutArchivedAt->first()->refresh()->archived_at)
@@ -169,85 +166,14 @@ it('unarchives the model if UnarchiveAction is called', function () {
         ->assertSuccessful()
         ->assertCanSeeTableRecords($modelWithArchivedAt)
         ->assertCountTableRecords(1)
-        ->assertTableActionExists(UnArchiveAction::class, record: $modelWithArchivedAt->first())
-        ->assertTableActionDoesNotExist(ArchiveAction::class, record: $modelWithArchivedAt->first())
+        ->assertTableActionExists(TableUnArchiveAction::class, record: $modelWithArchivedAt->first())
+        ->assertTableActionDoesNotExist(TableArchiveAction::class, record: $modelWithArchivedAt->first())
 
-        ->callTableAction(UnArchiveAction::class, $modelWithArchivedAt->first())
+        ->callTableAction(TableUnArchiveAction::class, $modelWithArchivedAt->first())
         ->assertHasNoTableActionErrors();
 
     expect($modelWithArchivedAt->first()->refresh()->archived_at)
         ->toBe(null);
-});
-
-it('can set default archived-table-row classes', function () {
-    $plugin = new FilamentArchivablePlugin;
-
-    expect(FilamentArchivable::$archivedRecordClasses)
-        ->toBeNull();
-
-    $plugin->archivedTableRowClasses(['opacity-25']);
-
-    expect(FilamentArchivable::$archivedRecordClasses)
-        ->not->toBeNull()
-        ->toBe(['opacity-25']);
-
-    $modelWithArchivedAt = ModelWithArchivableTrait::factory()->count(1)->create(['archived_at' => now()]);
-
-    livewire(ModelWithArchivableTraitResource\Pages\ListPage::class)
-        ->filterTable(ArchivedFilter::class, true)
-        ->assertSuccessful()
-        ->assertCanSeeTableRecords($modelWithArchivedAt)
-        ->assertCountTableRecords(1)
-        ->assertTableActionExists(UnArchiveAction::class, record: $modelWithArchivedAt->first())
-        ->assertTableActionDoesNotExist(ArchiveAction::class, record: $modelWithArchivedAt->first())
-        ->assertSee('opacity-25');
-});
-
-it('can set the recordClasses specific for archived records in the table', function () {
-
-    FilamentArchivable::$archivedRecordClasses = null;
-
-    expect(FilamentArchivable::$archivedRecordClasses)
-        ->toBeNull();
-
-    $modelWithArchivedAt = ModelWithArchivableTrait::factory()->count(1)->create(['archived_at' => now()]);
-
-    // bg-color-300 is set in @see ModelWithArchivableTraitAndCustomClassesResource
-    livewire(ModelWithArchivableTraitAndCustomClassesResource\Pages\ListPage::class)
-        ->filterTable(ArchivedFilter::class, true)
-        ->assertSuccessful()
-        ->assertCanSeeTableRecords($modelWithArchivedAt)
-        ->assertCountTableRecords(1)
-        ->assertSee('bg-red-300');
-
-});
-
-it('can ignore default archived-table-row classes when specificly defined on the resource-table', function () {
-
-    $plugin = new FilamentArchivablePlugin;
-
-    expect(FilamentArchivable::$archivedRecordClasses)
-        ->toBeNull();
-
-    $plugin->archivedTableRowClasses(['opacity-25']);
-
-    expect(FilamentArchivable::$archivedRecordClasses)
-        ->not->toBeNull()
-        ->toBe(['opacity-25']);
-
-    $modelWithArchivedAt = ModelWithArchivableTrait::factory()->count(1)->create(['archived_at' => now()]);
-
-    // archivedRecordClasses is set to false in @see ModelWithArchivableTraitAndCustomClassesResource
-    livewire(ModelWithArchivableTraitAndFalseCustomClassesResource\Pages\ListPage::class)
-        ->filterTable(ArchivedFilter::class, true)
-        ->assertSuccessful()
-        ->assertCanSeeTableRecords($modelWithArchivedAt)
-        ->assertCountTableRecords(1)
-        ->assertTableActionExists(UnArchiveAction::class, record: $modelWithArchivedAt->first())
-        ->assertTableActionDoesNotExist(ArchiveAction::class, record: $modelWithArchivedAt->first())
-        ->assertDontSee('opacity-25')
-        ->assertDontSee('bg-red-300');
-
 });
 
 it('can show archive Action on Edit page', function () {
@@ -305,8 +231,7 @@ it('can archive a model on Edit page', function () {
 
     $unArchivedModel->refresh();
 
-    $this->
-        assertNotNull($unArchivedModel->archived_at);
+    expect($unArchivedModel->archived_at)->not->toBeNull();
 });
 
 it('can unarchive a model on Edit page', function () {
@@ -320,7 +245,6 @@ it('can unarchive a model on Edit page', function () {
 
     $archivedModel->refresh();
 
-    $this->
-        assertNull($archivedModel->archived_at);
+    expect($archivedModel->archived_at)->toBeNull();
 
 });

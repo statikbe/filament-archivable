@@ -1,17 +1,17 @@
 <?php
 
-namespace Okeonline\FilamentArchivable\Tests\TestResources;
+namespace Statik\FilamentArchivable\Tests\TestResources;
 
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\TextInput;
-use Filament\Forms\Form;
 use Filament\Resources\Resource;
+use Filament\Schemas\Schema;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
-use Okeonline\FilamentArchivable\Tables\Actions\ArchiveAction;
-use Okeonline\FilamentArchivable\Tables\Actions\UnArchiveAction;
-use Okeonline\FilamentArchivable\Tests\TestModels\ModelWithoutArchivableTrait;
-use Okeonline\FilamentArchivable\Tests\TestResources\ModelWithoutArchivableTraitResource\Pages\ListPage;
+use Statik\FilamentArchivable\Actions\ArchiveAction;
+use Statik\FilamentArchivable\Actions\UnArchiveAction;
+use Statik\FilamentArchivable\Tests\TestModels\ModelWithoutArchivableTrait;
+use Statik\FilamentArchivable\Tests\TestResources\ModelWithoutArchivableTraitResource\Pages\ListPage;
 
 class ModelWithoutArchivableTraitResource extends Resource
 {
@@ -19,10 +19,10 @@ class ModelWithoutArchivableTraitResource extends Resource
 
     public static ?string $modelLabel = 'without';
 
-    public static function form(Form $form): Form
+    public static function form(Schema $schema): Schema
     {
-        return $form
-            ->schema([
+        return $schema
+            ->components([
                 TextInput::make('name'),
                 DatePicker::make('archived_at'),
             ]);
@@ -31,7 +31,6 @@ class ModelWithoutArchivableTraitResource extends Resource
     public static function table(Table $table): Table
     {
         return $table
-            ->archivedRecordClasses(true)
             ->columns([
                 TextColumn::make('name'),
                 TextColumn::make('archived_at')
@@ -40,7 +39,7 @@ class ModelWithoutArchivableTraitResource extends Resource
             ->filters([
                 //
             ])
-            ->actions([
+            ->recordActions([
                 ArchiveAction::make(),
                 UnArchiveAction::make(),
             ]);

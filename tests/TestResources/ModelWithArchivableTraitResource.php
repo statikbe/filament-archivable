@@ -1,22 +1,22 @@
 <?php
 
-namespace Okeonline\FilamentArchivable\Tests\TestResources;
+namespace Statik\FilamentArchivable\Tests\TestResources;
 
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\TextInput;
-use Filament\Forms\Form;
 use Filament\Resources\Resource;
+use Filament\Schemas\Schema;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use LaravelArchivable\Scopes\ArchivableScope;
-use Okeonline\FilamentArchivable\Tables\Actions\ArchiveAction;
-use Okeonline\FilamentArchivable\Tables\Actions\UnArchiveAction;
-use Okeonline\FilamentArchivable\Tables\Filters\ArchivedFilter;
-use Okeonline\FilamentArchivable\Tests\TestModels\ModelWithArchivableTrait;
-use Okeonline\FilamentArchivable\Tests\TestResources\ModelWithArchivableTraitResource\Pages\EditPage;
-use Okeonline\FilamentArchivable\Tests\TestResources\ModelWithArchivableTraitResource\Pages\ListPage;
+use Statik\FilamentArchivable\Actions\ArchiveAction;
+use Statik\FilamentArchivable\Actions\UnArchiveAction;
+use Statik\FilamentArchivable\Tables\Filters\ArchivedFilter;
+use Statik\FilamentArchivable\Tests\TestModels\ModelWithArchivableTrait;
+use Statik\FilamentArchivable\Tests\TestResources\ModelWithArchivableTraitResource\Pages\EditPage;
+use Statik\FilamentArchivable\Tests\TestResources\ModelWithArchivableTraitResource\Pages\ListPage;
 
 class ModelWithArchivableTraitResource extends Resource
 {
@@ -24,10 +24,10 @@ class ModelWithArchivableTraitResource extends Resource
 
     public static ?string $modelLabel = 'with';
 
-    public static function form(Form $form): Form
+    public static function form(Schema $schema): Schema
     {
-        return $form
-            ->schema([
+        return $schema
+            ->components([
                 TextInput::make('name'),
                 DatePicker::make('archived_at'),
             ]);
@@ -36,7 +36,6 @@ class ModelWithArchivableTraitResource extends Resource
     public static function table(Table $table): Table
     {
         return $table
-            ->archivedRecordClasses(true)
             ->columns([
                 TextColumn::make('name'),
                 TextColumn::make('archived_at')
@@ -45,7 +44,7 @@ class ModelWithArchivableTraitResource extends Resource
             ->filters([
                 ArchivedFilter::make(),
             ])
-            ->actions([
+            ->recordActions([
                 ArchiveAction::make(),
                 UnArchiveAction::make(),
             ]);

@@ -1,18 +1,18 @@
 <?php
 
-namespace Okeonline\FilamentArchivable\Tests\TestResources;
+namespace Statik\FilamentArchivable\Tests\TestResources;
 
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\TextInput;
-use Filament\Forms\Form;
 use Filament\Resources\Resource;
+use Filament\Schemas\Schema;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
-use Okeonline\FilamentArchivable\Tables\Actions\ArchiveAction;
-use Okeonline\FilamentArchivable\Tables\Actions\UnArchiveAction;
-use Okeonline\FilamentArchivable\Tables\Filters\ArchivedFilter;
-use Okeonline\FilamentArchivable\Tests\TestModels\ModelWithArchivableTrait;
-use Okeonline\FilamentArchivable\Tests\TestResources\ModelWithArchivableTraitAndCustomClassesResource\Pages\ListPage;
+use Statik\FilamentArchivable\Actions\ArchiveAction;
+use Statik\FilamentArchivable\Actions\UnArchiveAction;
+use Statik\FilamentArchivable\Tables\Filters\ArchivedFilter;
+use Statik\FilamentArchivable\Tests\TestModels\ModelWithArchivableTrait;
+use Statik\FilamentArchivable\Tests\TestResources\ModelWithArchivableTraitAndCustomClassesResource\Pages\ListPage;
 
 class ModelWithArchivableTraitAndCustomClassesResource extends Resource
 {
@@ -20,10 +20,10 @@ class ModelWithArchivableTraitAndCustomClassesResource extends Resource
 
     public static ?string $modelLabel = 'with-classes';
 
-    public static function form(Form $form): Form
+    public static function form(Schema $schema): Schema
     {
-        return $form
-            ->schema([
+        return $schema
+            ->components([
                 TextInput::make('name'),
                 DatePicker::make('archived_at'),
             ]);
@@ -32,7 +32,6 @@ class ModelWithArchivableTraitAndCustomClassesResource extends Resource
     public static function table(Table $table): Table
     {
         return $table
-            ->archivedRecordClasses(['bg-red-300'])
             ->columns([
                 TextColumn::make('name'),
                 TextColumn::make('archived_at')
@@ -41,7 +40,7 @@ class ModelWithArchivableTraitAndCustomClassesResource extends Resource
             ->filters([
                 ArchivedFilter::make(),
             ])
-            ->actions([
+            ->recordActions([
                 ArchiveAction::make(),
                 UnArchiveAction::make(),
             ]);

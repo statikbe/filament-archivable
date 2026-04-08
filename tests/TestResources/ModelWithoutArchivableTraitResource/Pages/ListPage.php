@@ -1,9 +1,9 @@
 <?php
 
-namespace Okeonline\FilamentArchivable\Tests\TestResources\ModelWithoutArchivableTraitResource\Pages;
+namespace Statik\FilamentArchivable\Tests\TestResources\ModelWithoutArchivableTraitResource\Pages;
 
 use Filament\Resources\Pages\ListRecords;
-use Okeonline\FilamentArchivable\Tests\TestResources\ModelWithoutArchivableTraitResource;
+use Statik\FilamentArchivable\Tests\TestResources\ModelWithoutArchivableTraitResource;
 
 class ListPage extends ListRecords
 {
